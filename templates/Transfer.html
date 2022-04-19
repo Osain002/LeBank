@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<html>
+	<style>
+		p{
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: medium;
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='StyleTransfer.css')}}">
+	<div class='transDiv'>
+		<p>Transfer from: {{sc}};  {{an}} </p> <!-- sc = sortcode, an = account number -->
+		<form method='post'>
+			<p>Please enter recipient's details:</p>
+			<label for='toName'>Name:</label>
+			<input type="text" name="toName"><br><br>
+			<label for='toSC'>Sort code:</label>
+			<input type="text" name="toSC"><br><br>
+			<label for='toAN'>Acc No:</label>
+			<input type="text" name="toAN"><br><br><br>
+			<label for='amount'>Amount:</label>
+			<input type="text" name="amount">
+			<input class='transfer' type="submit" value='send'>
+		</form>
+	</div>
+</html>
+
+{% endblock %}

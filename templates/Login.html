@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<html>
+	<style>
+		input{
+			position:absolute;
+			left: 100px;
+		}
+		.logout{
+			visibility: hidden;
+		}
+	</style>
+	<body>
+		<div class='signup'>
+			{% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                              {% for msg in messages%}
+                                    <p style="color: red">{{msg}}</p>
+                              {% endfor %}
+                        {% endif %}
+                  {% endwith %}
+			<form action='http://127.0.0.1:5000/login' method = 'post'>
+				<label for="email">Email:</label>
+				<input type="email" name="email"><br><br>
+				<label for="password">Password:</label>
+				<input type="password" name="password"><br><br>
+				<input type="submit" value="Log in"></form>
+			</form>
+		</div><br><br>
+		<a href='newUser'>
+				Not got an account? Sign up!
+		</a>
+	</body>
+</html>
+{% endblock %}

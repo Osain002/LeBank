@@ -1,0 +1,30 @@
+input{
+	position: absolute;
+	left: 100px;
+}
+.transfer{
+	position: absolute;
+	top: 300px;
+	border: None;
+	color:  black;
+	background-color: lightgrey;
+	text-decoration: None;
+	padding: 5px;
+	
+}
+.transfer:hover{
+	background-color: white;
+}
+			
+.transDiv{
+	position:fixed;
+	top: 40%;
+  	left: 50%;
+  	transform: translate(-50%, -50%);
+	border:  1px solid grey;
+	backdrop-filter: blur(5px);
+	width:  400px;
+	height: 320px;
+	padding: 10px;
+
+}
