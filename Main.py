@@ -34,69 +34,75 @@ class User(db.Model):
 
 class Details:
 	def accountNum(self):
-		return str(random.randint(10000000,99999999))
+		return str(random.randint(10000000,99999999)) #return account number as a string
 	def sort_code(self):
 		num = str(random.randint(120000,129999))
-		sc = '12' +'-'+ num[2]+num[3] + '-' +num[4] + num[5]
+		sc = '12' +'-'+ num[2]+num[3] + '-' +num[4] + num[5] #generate sortcode as a string
 		return sc
-
-
-
-
-
-
-
 
 @app.route('/newUser', methods=['POST','GET'])
 def newUser():
 	print(request.method)
 	if request.method == 'POST':
 		session.permanent = True  #create permanent session
+
 		first_name = request.form['firstName'] #get details from html form 
 		last_name = request.form['LastName']
 		email = request.form['email']
 		password = request.form['password']
 
-		found_email = User.query.filter_by(email = email).first()
 
-		if found_email:
-			flash('email already in use')
-			return render_template('SignUp.html')
+		found_email = User.query.filter_by(email = email).first() #check if user already exists
+
+		if first_name != '' and last_name != '' and email != '' and password != '':
+			if found_email:
+				flash('email already in use')
+				return render_template('SignUp.html')
+			elif len(password) < 6:
+				flash('Password must be at least 6 characters long')
+				return render_template('SignUp.html')
+			else:
+				details = Details()  #create instance of details class
+				sortCode = details.sort_code() #generate sort code
+				accNo = details.accountNum() # generate account number
+				session['sortcode'] = sortCode
+				session['accountNum'] = accNo
+				bal = 50
+
+				session['user'] = first_name
+				session['lname'] = last_name
+
+				newUser = User(first_name, last_name, email, password, sortCode,accNo, bal)
+				db.session.add(newUser)
+				db.session.commit()
+				return(redirect(url_for('home')))
 		else:
-			details = Details()  #create instance of details class
-			sortCode = details.sort_code() #generate sort code
-			accNo = details.accountNum() # generate account number
-			session['sortcode'] = sortCode
-			session['accountNum'] = accNo
-			bal = 50
-
-			session['user'] = first_name
-			session['lname'] = last_name
-
-			newUser = User(first_name, last_name, email, password, sortCode,accNo, bal)
-			db.session.add(newUser)
-			db.session.commit()
-			return(redirect(url_for('home')))
-
-	return render_template('SignUp.html')
+			flash('Details cannot be left blank')
+			return render_template('SignUp.html')
+	else:
+		return render_template('SignUp.html')
 
 
 @app.route('/login', methods=['POST','GET'])
 def login():
 	if request.method == 'POST':
-		email = request.form['email']
-		password = request.form['password']
-		user = User.query.filter_by(email = email).first()
-
-		if password == user.password and email == user.email:
-			session['user'] = user.fname
-			session['balance'] = user.balance
-			session['sortcode'] = user.sort_code
-			session['accountNum'] = user.account_number
-			return(redirect(url_for('home')))
+		email = request.form['email'] #get email input value
+		password = request.form['password'] #get password input value
 		
+
+		if type(email) == None or type(password) == None: #check that there is a non empty input
+			user = User.query.filter_by(email = email).first() #get user details from database
+			if password == user.password and email == user.email: #if user exists, check if email AND password entered match those in the db.				
+				session['user'] = user.fname #set session user
+				#session['balance'] = user.balance #get user balance (remove this and call balance directly from database when needed)
+				session['sortcode'] = user.sort_code #get user's sort code
+				session['accountNum'] = user.account_number #get user account number
+				return(redirect(url_for('home')))
+			
+			else: 	
+				flash('Incorrect username or password') #if email and password do not match, flash message 
+				return render_template('Login.html')
 		else:
-			flash('Incorrect username or password')
 			return render_template('Login.html')
 	else:
 		return render_template('Login.html')
@@ -137,12 +143,14 @@ def moveMoney():
 
 				return redirect(url_for('home')) #redirect to home
 			else:
-				#add message flashing to say account does not exist 
+				flash('Account not found')
 				return render_template('Transfer.html', sc = sender.sort_code, an = sender.account_number)
 		else:
 			return render_template('Transfer.html', sc = sender.sort_code, an = sender.account_number)
 	else:
 		return redirect(url_for('login'))
+
+
 
 @app.route('/logout')
 def logout():

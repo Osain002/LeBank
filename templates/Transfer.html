@@ -10,6 +10,15 @@
 	</style>
 	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='StyleTransfer.css')}}">
 	<div class='transDiv'>
+
+		{% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages%}
+                    <p style="color: red">{{msg}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
 		<p>Transfer from: {{sc}};  {{an}} </p> <!-- sc = sortcode, an = account number -->
 		<form method='post'>
 			<p>Please enter recipient's details:</p>

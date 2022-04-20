@@ -3,19 +3,11 @@ h{
       margin: 5px;
       text-decoration: underline;
 }
-body{
-        background-image: url("static/Images/background.jpg");
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
-}
-
 .logout{
       position: relative;
       float: right;
       border: 1px solid black;
       color:  black;
-      
       background-color: white;
       opacity: 0.5;
       text-decoration: None;
