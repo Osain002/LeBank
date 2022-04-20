@@ -4,7 +4,7 @@ h{
       text-decoration: underline;
 }
 body{
-        background-image: url('static/Images/background.jpg');
+        background-image: url("static/Images/background.jpg");
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;
